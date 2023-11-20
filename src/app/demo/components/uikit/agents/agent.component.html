@@ -1,0 +1,339 @@
+<!-- <div class="grid">
+	<div class="col-12">
+		<div class="card">
+			<h5>Agents</h5>
+
+				<ng-template pTemplate="caption">
+					<div class="flex justify-content-between flex-column sm:flex-row">
+						<span class="p-input-icon-left mb-2">
+							<i class="pi pi-search"></i>
+						</span>
+					</div>
+					<button pButton pRipple label="New" icon="pi pi-plus" class="p-button-success mr-2" (click)="openNew()"></button>
+					<button pButton pRipple label="Delete" icon="pi pi-trash" class="p-button-danger" (click)="deleteSelectedAgents()" [disabled]="!selectedAgents || !selectedAgents.length"></button>
+				</ng-template>
+				<ng-template pTemplate="header">
+                    <tr>
+                        <th style="width: 3rem">
+                            <p-tableHeaderCheckbox></p-tableHeaderCheckbox>
+                        </th>
+                        <th pSortableColumn="id">ID <p-sortIcon field="id"></p-sortIcon></th>
+                        <th pSortableColumn="reference">Reference <p-sortIcon field="reference"></p-sortIcon></th>
+                        <th pSortableColumn="date">Date <p-sortIcon field="date"></p-sortIcon></th>
+                        <th pSortableColumn="createur">Createur<p-sortIcon field="createur"></p-sortIcon></th>
+                        <th pSortableColumn="actualisateur">Actualisateur <p-sortIcon field="actualisateur"></p-sortIcon></th>
+                        <th pSortableColumn="etatDossier">Etat <p-sortIcon field="etatDossier"></p-sortIcon></th>
+                        <th pSortableColumn="matriculeAgent">MatriculeAgent <p-sortIcon field="matriculeAgent"></p-sortIcon></th>
+                        <th></th>
+                    </tr>
+                </ng-template>
+				<ng-template pTemplate="body" *ngFor="let agent of agents">
+
+                    <tr>
+                        <td>
+                            <p-tableCheckbox [value]="agent"></p-tableCheckbox>
+                        </td>
+                        <td style="width:14%; min-width:10rem;">
+                            <span class="p-column-title">ID</span>
+                            {{agent.matriculeAgent || agent.matriculeAgent}}
+                        </td>
+                        <td style="width:14%; min-width:10rem;">
+                            <span class="p-column-title">Nom</span>
+                        {{agent.nom}}
+                        </td>
+                        <td style="width:14%; min-width:8rem;">
+                            <span class="p-column-title">¨Prenom</span>
+                            {{agent.prenom}}
+                        </td>
+                        <td style="width:14%; min-width:10rem;">
+                            <span class="p-column-title">Sexe</span>
+                            {{agent.sexe}}
+                        </td>
+                        <td style="width:14%; min-width: 10rem;">
+                            <span class="p-column-title">Service</span>
+                            {{agent.service}}
+                        </td>
+                       <td style="width:14%; min-width: 10rem;">
+                        <span class="p-column-title">Email</span>
+                        {{agent.email}}
+                       </td>
+                        <td>
+                            <div class="flex">
+                            </div>
+                        </td>
+                    </tr>
+
+                </ng-template>
+				<ng-template pTemplate="emptymessage">
+					<tr>
+						<td colspan="7">No customers found.</td>
+					</tr>
+				</ng-template>
+				<ng-template pTemplate="loadingbody">
+					<tr>
+						<td colspan="7">Loading customers data. Please wait.</td>
+					</tr>
+				</ng-template>
+		</div>
+
+	</div>
+</div> -->
+
+
+
+
+<div class="grid">
+    <div class="col-12">
+        <div class="card px-6 py-6">
+            <p-toast></p-toast>
+            <p-toolbar styleClass="mb-4">
+                <ng-template pTemplate="left">
+                    <div class="my-2">
+                        <button pButton pRipple label="New" icon="pi pi-plus" class="p-button-success mr-2" (click)="openNew()"></button>
+                        <button pButton pRipple label="Delete" icon="pi pi-trash" class="p-button-danger" ></button>
+                    </div>
+                </ng-template>
+
+                <ng-template pTemplate="right">
+                    <p-fileUpload mode="basic" accept="image/*" [maxFileSize]="1000000" label="Import" chooseLabel="Import" class="mr-2 inline-block"></p-fileUpload>
+                    <button pButton pRipple label="Export" icon="pi pi-upload" class="p-button-help" (click)="dt.exportCSV()"></button>
+                </ng-template>
+            </p-toolbar>
+
+            <p-table #dt [value]="agents" [columns]="cols" responsiveLayout="scroll" [rows]="10" [globalFilterFields]="['name','country.name','representative.name','status']" [rows]="10" [paginator]="true" [rowsPerPageOptions]="[10,20,30]" [showCurrentPageReport]="true" currentPageReportTemplate="Showing {first} to {last} of {totalRecords} entries"  selectionMode="multiple" [rowHover]="true" dataKey="id">
+                <ng-template pTemplate="caption">
+                    <div class="flex flex-column md:flex-row md:justify-content-between md:align-items-center">
+                        <h5 class="m-0">Agents soumissionneurs de demandes</h5>
+                        <span class="block mt-2 md:mt-0 p-input-icon-left">
+                            <i class="pi pi-search"></i>
+                            <input pInputText type="text" (input)="onGlobalFilter(dt, $event)" placeholder="Search..."  class="w-full sm:w-auto"/>
+                        </span>
+                    </div>
+                </ng-template>
+                <ng-template pTemplate="header">
+                    <tr>
+                        <th style="width: 3rem">
+                            <p-tableHeaderCheckbox></p-tableHeaderCheckbox>
+                        </th>
+                        <th pSortableColumn="id">ID <p-sortIcon field="id"></p-sortIcon></th>
+                        <th pSortableColumn="nom">Nom <p-sortIcon field="nom"></p-sortIcon></th>
+                        <th pSortableColumn="prenom">Prénom <p-sortIcon field="prenom"></p-sortIcon></th>
+                        <th pSortableColumn="service">Service<p-sortIcon field="service"></p-sortIcon></th>
+                        <th pSortableColumn="adresse">Adresse <p-sortIcon field="adresse"></p-sortIcon></th>
+                        <th pSortableColumn="email">Email <p-sortIcon field="email"></p-sortIcon></th>
+                        <th pSortableColumn="sexe">Sexe <p-sortIcon field="sexe"></p-sortIcon></th>
+                        <th pSortableColumn="emploi">Emploi <p-sortIcon field="emploi"></p-sortIcon></th>
+                        <th pSortableColumn="institution">Institution <p-sortIcon field="institution"></p-sortIcon></th>
+                        <th pSortableColumn="nomJeuneFille">NomJeuneFille <p-sortIcon field="nomJeuneFille"></p-sortIcon></th>
+                        <th pSortableColumn="matriculeAgent">MatriculeAgent <p-sortIcon field="matriculeAgent"></p-sortIcon></th>
+                        <th pSortableColumn="telephone">Telephone <p-sortIcon field="telephone"></p-sortIcon></th>
+                        <th></th>
+                    </tr>
+                </ng-template>
+                <ng-template pTemplate="body" let-agent>
+                    <tr>
+                        <td>
+                            <p-tableCheckbox [value]="agent"></p-tableCheckbox>
+                        </td>
+                 
+                        <td style="width:14%; min-width:10rem;">
+                            <span class="p-column-title">ID</span>
+                            {{agent.matriculeAgent || agent.matriculeAgent}}
+                        </td>
+
+                        <td style="width:14%; min-width:10rem;">
+                            <span class="p-column-title">Nom</span>
+                        {{agent.nom}}
+                        </td>
+
+                        <td style="width:14%; min-width:8rem;">
+                            <span class="p-column-title">¨Prenom</span>
+                            {{agent.prenom}}
+                        </td>
+
+                        <td style="width:14%; min-width:10rem;">
+                            <span class="p-column-title">Sexe</span>
+                            {{agent.sexe}}
+                        </td>
+
+                        <td style="width:14%; min-width: 10rem;">
+                            <span class="p-column-title">Service</span>
+                            {{agent.service}}
+                        </td>
+
+                       <td style="width:14%; min-width: 10rem;">
+                        <span class="p-column-title">Email</span>
+                        {{agent.email}}
+                       </td>
+                       <td style="width:14%; min-width: 10rem;">
+                        <span class="p-column-title">sexe</span>
+                        {{agent.sexe}}
+                       </td>
+                       <td style="width:14%; min-width: 10rem;">
+                        <span class="p-column-title">Emploi</span>
+                        {{agent.emploi}}
+                       </td>
+                       <td style="width:14%; min-width: 10rem;">
+                        <span class="p-column-title">Institution</span>
+                        {{agent.institution}}
+                       </td>
+                       <td style="width:14%; min-width: 10rem;">
+                        <span class="p-column-title">NomJeuneFille</span>
+                        {{agent.nomJeuneFille}}
+                       </td>
+                       <td style="width:14%; min-width: 10rem;">
+                        <span class="p-column-title">MatriculeAgent</span>
+                        {{agent.matriculeAgent}}
+                       </td>
+                       <td style="width:14%; min-width: 10rem;">
+                        <span class="p-column-title">Telephone</span>
+                        {{agent.telephone}}
+                       </td>
+                    
+                        
+                        <td>
+                            <div class="flex">
+                                <button pButton pRipple icon="pi pi-pencil" class="p-button-rounded p-button-success mr-2" (click)="editAgent(agent)"></button>
+                                <button pButton pRipple icon="pi pi-trash" class="p-button-rounded p-button-warning" (click)="deleteAgent(agent)"></button>
+                            </div>
+                        </td>
+
+                    </tr>
+                </ng-template>
+            </p-table>
+        </div>
+
+
+
+
+        <p-dialog [(visible)]="agentDialog" [style]="{width: '800px'}" header="Ajout / Mise à jour" [modal]="true" class="p-fluid">
+            <ng-template pTemplate="content">
+                   
+
+                <div class="formgrid grid">
+
+                    <div class="field col-6 ">
+                        <label for="name">Nom</label>
+                        <input type="text" pInputText id="nom" [(ngModel)]="agent.nom" required autofocus [ngClass]="{'ng-invalid ng-dirty' : submitted && !agent.nom}"/>
+                        <small class="ng-dirty ng-invalid" *ngIf="submitted && !agent.nom">Nom est obligatoire.</small>
+                    </div>
+
+                    <div class="field col-6">
+                        <label for="name">Prénom</label>
+                        <input type="text" pInputText id="prenom" [(ngModel)]="agent.prenom" required autofocus [ngClass]="{'ng-invalid ng-dirty' : submitted && !agent.prenom}"/>
+                        <small class="ng-dirty ng-invalid" *ngIf="submitted && !agent.prenom">prenom est obligatoire.</small>
+                    </div>
+            
+                </div>
+
+                
+                <div class="formgrid grid">
+
+                    <div class="field col-6">
+                        <label for="name">Sexe</label>
+                        <input type="text" pInputText id="sexe" [(ngModel)]="agent.sexe" required autofocus [ngClass]="{'ng-invalid ng-dirty' : submitted && !agent.sexe}"/>
+                        <small class="ng-dirty ng-invalid" *ngIf="submitted && !agent.sexe">sexe est obligatoire.</small>
+                    </div>
+
+                    <div class="field col-6">
+                        <label for="name">Service</label>
+                        <input type="text" pInputText id="service" [(ngModel)]="agent.service" required autofocus [ngClass]="{'ng-invalid ng-dirty' : submitted && !agent.service}"/>
+                        <small class="ng-dirty ng-invalid" *ngIf="submitted && !agent.service">service est obligatoire.</small>
+                    </div>
+            
+                </div>
+
+
+                <div class="formgrid grid">
+
+                    <div class="field col-6">
+                        <label for="name">matricule Agent</label>
+                        <input type="text" pInputText id="matriculeAgent" [(ngModel)]="agent.matriculeAgent" required autofocus [ngClass]="{'ng-invalid ng-dirty' : submitted && !agent.matriculeAgent}"/>
+                        <small class="ng-dirty ng-invalid" *ngIf="submitted && !agent.matriculeAgent">matriculeAgent est obligatoire.</small>
+                    </div>
+
+                    <div class="field col-6">
+                        <label for="name">emploi</label>
+                        <input type="text" pInputText id="emploi" [(ngModel)]="agent.emploi" required autofocus [ngClass]="{'ng-invalid ng-dirty' : submitted && !agent.emploi}"/>
+                        <small class="ng-dirty ng-invalid" *ngIf="submitted && !agent.emploi">service est obligatoire.</small>
+                    </div>
+            
+                </div>
+
+
+                <div class="formgrid grid">
+
+                    <div class="field col-6">
+                        <label for="name">institution </label>
+                        <input type="text" pInputText id="institution" [(ngModel)]="agent.institution" required autofocus [ngClass]="{'ng-invalid ng-dirty' : submitted && !agent.institution}"/>
+                        <small class="ng-dirty ng-invalid" *ngIf="submitted && !agent.institution">institution est obligatoire.</small>
+                    </div>
+
+                    <div class="field col-6">
+                        <label for="name">nomJeuneFille</label>
+                        <input type="text" pInputText id="nomJeuneFille" [(ngModel)]="agent.nomJeuneFille" required autofocus [ngClass]="{'ng-invalid ng-dirty' : submitted && !agent.nomJeuneFille}"/>
+                        <small class="ng-dirty ng-invalid" *ngIf="submitted && !agent.nomJeuneFille">nomJeuneFille est obligatoire.</small>
+                    </div>
+            
+                </div>
+
+                
+                <div class="formgrid grid">
+
+                    <div class="field col-6">
+                        <label for="name">adresse </label>
+                        <input type="text" pInputText id="adresse" [(ngModel)]="agent.adresse" required autofocus [ngClass]="{'ng-invalid ng-dirty' : submitted && !agent.adresse}"/>
+                        <small class="ng-dirty ng-invalid" *ngIf="submitted && !agent.adresse">institution est obligatoire.</small>
+                    </div>
+
+                    <div class="field col-6">
+                        <label for="name">email</label>
+                        <input type="text" pInputText id="email" [(ngModel)]="agent.email" required autofocus [ngClass]="{'ng-invalid ng-dirty' : submitted && !agent.email}"/>
+                        <small class="ng-dirty ng-invalid" *ngIf="submitted && !agent.email">email est obligatoire.</small>
+                    </div>
+            
+                </div>
+
+
+                <div class="formgrid grid">
+
+                    <div class="field col-6">
+                        <label for="name">telephone </label>
+                        <input type="number" pInputText id="telephone" [(ngModel)]="agent.telephone" required autofocus [ngClass]="{'ng-invalid ng-dirty' : submitted && !agent.telephone}"/>
+                        <small class="ng-dirty ng-invalid" *ngIf="submitted && !agent.telephone">telephone est obligatoire.</small>
+                    </div>
+
+                    <div class="field col-6">
+                        <label for="name">localite</label>
+                        <input type="email" pInputText id="localite" [(ngModel)]="agent.localite" required autofocus [ngClass]="{'ng-invalid ng-dirty' : submitted && !agent.localite}"/>
+                        <small class="ng-dirty ng-invalid" *ngIf="submitted && !agent.localite">localite est obligatoire.</small>
+                    </div>
+            
+                </div>
+
+
+            </ng-template>
+
+
+
+            <ng-template pTemplate="footer">
+                <button pButton pRipple label="Cancel" icon="pi pi-times" class="p-button-text" (click)="hideDialog()"></button> 
+                <button pButton pRipple label="Save" icon="pi pi-check" class="p-button-text" (click)="saveAgent()" ></button>
+            </ng-template>
+        </p-dialog>
+
+        <p-dialog [(visible)]="deleteAgentDialog" header="Confirm" [modal]="true" [style]="{width:'450px'}">
+            <div class="flex align-items-center justify-content-center">
+                <i class="pi pi-exclamation-triangle mr-3" style="font-size: 2rem"></i>
+                <span *ngIf="agent">Are you sure you want to delete <b>{{agent.nom}} {{agent.prenom}}</b>?</span>
+            </div>
+
+            <ng-template pTemplate="footer">
+                <button pButton pRipple icon="pi pi-times" class="p-button-text" label="No" (click)="deleteAgentDialog = false"></button>
+                <button pButton pRipple icon="pi pi-check" class="p-button-text" label="Yes" (click)="confirmDelete(agent)"></button>
+            </ng-template>
+        </p-dialog>
+
+
+    </div>
+</div>

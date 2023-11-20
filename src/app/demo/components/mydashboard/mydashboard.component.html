@@ -1,0 +1,84 @@
+<div class="grid">
+	<div class="col-12">
+		<div class="card">
+			<h5>Filter Menu</h5>
+			<p-table #dt1 [value]="customers1" dataKey="id" [rows]="10" [loading]="loading" [rowHover]="true" styleClass="p-datatable-gridlines" [paginator]="true" [globalFilterFields]="['name','country.name','representative.name','status']" responsiveLayout="scroll">
+
+				<ng-template pTemplate="caption">
+					<div class="flex justify-content-between flex-column sm:flex-row">
+						<button pButton label="Clear" class="p-button-outlined mb-2" icon="pi pi-filter-slash" (click)="clear(dt1)"></button>
+						<span class="p-input-icon-left mb-2">
+							<i class="pi pi-search"></i>
+							<input pInputText type="text" #filter (input)="onGlobalFilter(dt1, $event)" placeholder="Search Keyword" class="w-full"/>
+						</span>
+					</div>
+					<button pButton pRipple label="New" icon="pi pi-plus" class="p-button-success mr-2" (click)="openNew()"></button>
+					<button pButton pRipple label="Delete" icon="pi pi-trash" class="p-button-danger" (click)="deleteSelectedDemandes()" [disabled]="!selectedDemandes || !selectedDemandes.length"></button>
+				</ng-template>
+				<ng-template pTemplate="header">
+                    <tr>
+                        <th style="width: 3rem">
+                            <p-tableHeaderCheckbox></p-tableHeaderCheckbox>
+                        </th>
+                        <th pSortableColumn="id">ID <p-sortIcon field="id"></p-sortIcon></th>
+                        <th pSortableColumn="reference">Reference <p-sortIcon field="reference"></p-sortIcon></th>
+                        <th pSortableColumn="date">Date <p-sortIcon field="date"></p-sortIcon></th>
+                        <th pSortableColumn="createur">Createur<p-sortIcon field="createur"></p-sortIcon></th>
+                        <th pSortableColumn="actualisateur">Actualisateur <p-sortIcon field="actualisateur"></p-sortIcon></th>
+                        <th pSortableColumn="etatDossier">Etat <p-sortIcon field="etatDossier"></p-sortIcon></th>
+                        <th pSortableColumn="matriculeAgent">MatriculeAgent <p-sortIcon field="matriculeAgent"></p-sortIcon></th>
+                        <th></th>
+                    </tr>
+                </ng-template>
+				<ng-template pTemplate="body" *ngFor="let demande of demandes">
+                    <tr>
+                        <td>
+                            <p-tableCheckbox [value]="demande"></p-tableCheckbox>
+                        </td>
+                        <td style="width:14%; min-width:10rem;">
+                            <span class="p-column-title">ID</span>
+                            {{demande.id || demande.id}}
+                        </td>
+                        <td style="width:14%; min-width:10rem;">
+                            <span class="p-column-title">Reference</span>
+                            {{demande.reference}}
+                        </td>
+                        <td style="width:14%; min-width:8rem;">
+                            <span class="p-column-title">Date</span>
+                            {{demande.date}}
+                        </td>
+                        <td style="width:14%; min-width:10rem;">
+                            <span class="p-column-title">Createur</span>
+                            {{demande.nom_agent_creer}}
+                        </td>
+                        <td style="width:14%; min-width: 10rem;">
+                            <span class="p-column-title">Actualisateur</span>
+                            {{demande.nom_agent_mise_jour}}
+                        </td>
+                       <td style="width:14%; min-width: 10rem;">
+                        <span class="p-column-title">Etat</span>
+                        {{demande.etatDossier}}
+                       </td>
+                        <td>
+                            <div class="flex">
+                                <button pButton pRipple icon="pi pi-pencil" class="p-button-rounded p-button-success mr-2" (click)="editDemande(demande)"></button>
+                                <button pButton pRipple icon="pi pi-trash" class="p-button-rounded p-button-warning" (click)="deleteDemande(demande)"></button>
+                            </div>
+                        </td>
+                    </tr>
+                </ng-template>
+				<ng-template pTemplate="emptymessage">
+					<tr>
+						<td colspan="7">No customers found.</td>
+					</tr>
+				</ng-template>
+				<ng-template pTemplate="loadingbody">
+					<tr>
+						<td colspan="7">Loading customers data. Please wait.</td>
+					</tr>
+				</ng-template>
+    		</p-table>
+		</div>
+
+	</div>
+</div>
