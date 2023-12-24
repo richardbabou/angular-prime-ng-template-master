@@ -1,7 +1,7 @@
-export interface File{
-    fileName?:string;
-    fileSize?:number;
-    fileType?:string;
-    fileDownloadUri?:string;
+export class File{
+    public fileName?:string;
+    public fileSize?:number;
+    public fileType?:string;
+    public fileDownloadUri?:string;
 
 }

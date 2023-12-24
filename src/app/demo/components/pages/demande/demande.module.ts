@@ -39,8 +39,8 @@ import { CalendarModule } from "primeng/calendar";
         DropdownModule,
         RadioButtonModule,
         InputNumberModule,
-        DialogModule
-    
+        DialogModule,
+        FormsModule
     ],
     declarations:[DemandeComponent]
 })

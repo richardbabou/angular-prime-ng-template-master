@@ -1,6 +1,7 @@
 import { NgModule } from '@angular/core';
 import { RouterModule } from '@angular/router';
-import { fileuploaddownloadComponent } from './file-upload-download.component';
+import { fileuploaddownloadComponent } from './fileuploaddownload.component';
+
 
 @NgModule({
 	imports: [RouterModule.forChild([

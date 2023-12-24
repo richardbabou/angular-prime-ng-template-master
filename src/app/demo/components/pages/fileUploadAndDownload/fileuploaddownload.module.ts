@@ -1,8 +1,6 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { fileuploaddownloadRoutingModule } from './file-upload-download-routing.module';
-import { fileuploaddownloadComponent } from './file-upload-download.component';
 import { TableModule } from 'primeng/table';
 import { FileUploadModule } from 'primeng/fileupload';
 import { ButtonModule } from 'primeng/button';
@@ -16,8 +14,11 @@ import { DropdownModule } from 'primeng/dropdown';
 import { RadioButtonModule } from 'primeng/radiobutton';
 import { InputNumberModule } from 'primeng/inputnumber';
 import { DialogModule } from 'primeng/dialog';
+import { fileuploaddownloadRoutingModule } from './fileuploaddownload-routing.module';
+import { fileuploaddownloadComponent } from './fileuploaddownload.component';
 
-NgModule({
+
+@NgModule({
     imports: [
         CommonModule,
         fileuploaddownloadRoutingModule,

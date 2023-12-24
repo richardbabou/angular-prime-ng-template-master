@@ -4,6 +4,9 @@ import { Product } from '../../api/product';
 import { ProductService } from '../../service/product.service';
 import { Subscription } from 'rxjs';
 import { LayoutService } from 'src/app/layout/service/app.layout.service';
+import { Demande } from '../../api/demande';
+import { DemandeService } from '../../service/demande.service';
+import { HttpResponse } from '@angular/common/http';
 
 @Component({
     templateUrl: './dashboard.component.html',
@@ -15,18 +18,19 @@ export class DashboardComponent implements OnInit, OnDestroy {
     products!: Product[];
 
     chartData: any;
-
+    demandes: Demande[] = [];
     chartOptions: any;
 
     subscription!: Subscription;
 
-    constructor(private productService: ProductService, public layoutService: LayoutService) {
+    constructor(private productService: ProductService, public layoutService: LayoutService,private demandeService:DemandeService) {
         this.subscription = this.layoutService.configUpdate$.subscribe(() => {
             this.initChart();
         });
     }
 
     ngOnInit() {
+        this.getDemandes();
         this.initChart();
         this.productService.getProductsSmall().then(data => this.products = data);
 
@@ -35,6 +39,14 @@ export class DashboardComponent implements OnInit, OnDestroy {
             { label: 'Remove', icon: 'pi pi-fw pi-minus' }
         ];
     }
+
+    getDemandes(){
+        this.demandeService.getDemande().subscribe((res: HttpResponse<Demande[]>) => {
+          const data = res.body ?? [];
+          this.demandes = data;
+          console.log(this.demandes)
+        });
+      }
 
     initChart() {
         const documentStyle = getComputedStyle(document.documentElement);

@@ -47,7 +47,6 @@ export class AgentComponent implements OnInit {
         this.getAgents();
         this.updatesAgents();
         this.saveAgent();
-        
 
     }
 
@@ -108,7 +107,9 @@ export class AgentComponent implements OnInit {
         this.agent = { ...agent };
     }
 
-
+    uploadSingleFile(file:File){
+        
+    }
 
 
     // confirmDeleteSelected() {

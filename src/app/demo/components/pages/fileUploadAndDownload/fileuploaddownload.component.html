@@ -1,0 +1,59 @@
+<!-- <div>
+  <input type="file" (change)="onFileChanged($event)">
+  <button (click)="uploadSingleFile()">Upload Single File</button>
+</div>
+
+<div>
+  <input type="file" multiple (change)="onFilesChanged($event)">
+  <button (click)="uploadMultipleFiles()">Upload Multiple Files</button>
+</div>
+
+<div>
+  <input type="text" [(ngModel)]="downloadFileName" placeholder="Enter file name to download">
+  <button (click)="downloadFile(downloadFileName)">Download File</button>
+</div> -->
+
+
+
+<!-- <div>
+  <h2>File Operations</h2>
+
+  <div>
+    <label for="single-file-input">Select Single File:</label>
+    <input type="file" id="single-file-input" (change)="onFileSelected($event)" />
+    <button (click)="uploadSingleFile()">Upload Single File</button>
+  </div>
+
+  <div>
+    <label for="multiple-file-input">Select Multiple Files:</label>
+    <input type="file" id="multiple-file-input" multiple (change)="onMultipleFilesSelected($event)" />
+    <button (click)="uploadMultipleFiles()">Upload Multiple Files</button>
+  </div>
+
+  <div>
+    <label for="download-file-input">Download File:</label>
+    <button (click)="downloadFile('your-file-name.pdf')">Download File</button>
+  </div>
+</div> -->
+<div>
+  <h3>File Upload</h3>
+  <div>
+    <p-fileUpload
+      name="file"
+      url="http://localhost:9090/api/upload-single-file" 
+      uploadLabel="Upload"
+      cancelLabel="Cancel"
+      [customUpload]="true"
+      (uploadHandler)="uploadFile()"
+    ></p-fileUpload>
+  </div>
+
+  <div>
+    <label for="motif">Motif:</label>
+    <input type="text" id="motif" [(ngModel)]="demande.motif" />
+  </div>
+
+  <div>
+    <button type="button" pButton (click)="uploadFile()">Submit</button>
+  </div>
+</div>

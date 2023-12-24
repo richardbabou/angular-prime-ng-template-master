@@ -1,5 +1,5 @@
 import { HttpResponse } from '@angular/common/http';
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit,Renderer2,ViewChild,ElementRef } from '@angular/core';
 import { MessageService } from 'primeng/api';
 import { DropdownModule } from 'primeng/dropdown';
 import { Table } from 'primeng/table';
@@ -7,6 +7,7 @@ import { Demande } from 'src/app/demo/api/demande';
 import { DemandeService } from 'src/app/demo/service/demande.service';
 import { Agent } from 'src/app/demo/api/agent';
 import { FileService } from 'src/app/demo/service/file.service';
+import { FormsModule } from '@angular/forms';
 
 @Component(
     {
@@ -15,25 +16,29 @@ import { FileService } from 'src/app/demo/service/file.service';
     }
 )
 export class DemandeComponent implements OnInit{
-
-
+  @ViewChild('fileInput') fileInput!: ElementRef;
+     file!: File ;
+     demande: any;
     selectedCertificateType: string = '';
     uploadedFiles: any[] = [];
     requiredFiles: any[] = [];
+    // selectedFile: File=null!;
+    selectedFiles: File[]=[];
     submitted: boolean = false;
     demandeDialog: boolean = false;
     demandes: Demande[] = [];
-    demande: Demande = new Demande();
+    // demande: Demande = new Demande();
     selectedDemandes: Demande[] = [];
     deleteDemandeDialog: boolean = false;
     deleteDemandesDialog: boolean = false;
     cols: any[] = [];
     rowsPerPageOptions = [5, 10, 20];
+    private selectedFile: File | null = null;
+    private selectedMultipleFiles: File[] = [];
 
 
 
-
-    constructor(private demandeService:DemandeService,private messageService:MessageService){}
+    constructor(private demandeService:DemandeService,private messageService:MessageService,private fileService:FileService,private renderer: Renderer2){}
     
 
 
@@ -41,11 +46,24 @@ export class DemandeComponent implements OnInit{
     ngOnInit(): void {
         this.getDemandes();
         this.updateRequiredFiles();
-        
-        
+        this.updatesDemandes();
+        this.demande = {}; // Initialize your demande object as needed
+       
     }
 
+    // createDemande(){
+    //   this.demandeService.createDemande(this.demande)
+    //     .subscribe(response => {
+    //       console.log('Demande created successfully:', response);
+    //     }, error => {
+    //       console.error('Error creating demande:', error);
+    //     });
+    // }
 
+
+    onFileChange(event: any): void {
+      this.file = event.target.files[0];
+    }
 
 
 
@@ -138,14 +156,14 @@ export class DemandeComponent implements OnInit{
 
 
 
-    deletedDemande(id:number){
-      this.demandeService.deleteDemande(id).subscribe(data=>{
-        console.log(data);
-        this.getDemandes;
-      })
-    }
+    // deletedDemande(id:number){
+    //   this.demandeService.deleteDemande(id).subscribe(data=>{
+    //     console.log(data);
+    //     this.getDemandes;
+    //   })
+    // }
 
-  //  
+
 
 
 
@@ -167,21 +185,30 @@ export class DemandeComponent implements OnInit{
 
 
 
-    editDemande(demande: Demande) {
-      this.demande = { ...demande };
-      this.demandeDialog = true;
-  }
+  //   editDemande(demande: Demande) {
+  //     this.demande = { ...demande };
+  //     this.demandeDialog = true;
+  // }
+
+
+
+  editDemande(demande: Demande) {
+    this.demande = { ...demande };
+    this.demandeDialog  = true;
+}
 
 
 
 
-
+  // deleteDemande(demande: Demande) {
+  //     this.deleteDemandeDialog = true;
+  //     this.demande = { ...demande };
+  // }
 
   deleteDemande(demande: Demande) {
     this.deleteDemandeDialog = true;
     this.demande = { ...demande };
 }
-
 
 
 
@@ -218,24 +245,25 @@ export class DemandeComponent implements OnInit{
     //     this.deleteDemandeDialog = false;
     //     this.demandes = this.demandes.filter(val => val.id !== this.demande.id);
     //     this.messageService.add({ severity: 'success', summary: 'Successful', detail: 'Demande Deleted', life: 3000 });
-    //     this.demande = {};
+    //     this.demande =new Demande();
     // }
 
 
-    confirmDelete(demande: Demande) {
-      this.deleteDemandeDialog = false;
-    this.demandeService.deleteDemande(demande.id).subscribe(
-       () => {
-           this.messageService.add({ severity: 'success', summary: 'Opération réussie', detail: ` ${this.demande.reference} a été supprimé avec succès`, life: 3000 });
-           this.getDemandes();  
-           this.demande=new Demande();
+
+//     confirmDelete(demande: Demande) {
+//       this.deleteDemandeDialog = false;
+//     this.demandeService.deleteDemande(demande.id).subscribe(
+//        () => {
+//            this.messageService.add({ severity: 'success', summary: 'Opération réussie', detail: ` ${this.demande.etatDossier} a été supprimé avec succès`, life: 3000 });
+//            this.getDemandes();  
+//            this.demande=new Demande();
           
-       },
-       (error) => {
-           console.error("Erreur lors de la suppression :", error);
-       }
-    );
-  }
+//        },
+//        (error) => {
+//            console.error("Erreur lors de la suppression :", error);
+//        }
+//     );
+//   }
 
 
 
@@ -246,36 +274,165 @@ export class DemandeComponent implements OnInit{
 
 
 
-
-
-
-
     saveDemande() {
+
       this.submitted = true;
+      console.log("kkkkkkkkkkkkkkkkkkkkkkkkkk")
+      // Vérification si l'ID du Agent est nul
+      if (this.demande.id === null || this.demande.id === undefined) {
+          // On va créer un nouveau Agent
+          this.demandeService.createDemande(this.demande).subscribe(
+              (response) => {
+                  console.log('agent créé avec succès :', response);
+                  this.messageService.add({ severity: 'success', summary: 'Opération réussie', detail: 'Chantier créé avec succès!', life: 3000 });
+                  this.demandeDialog = false;
+                  this.getDemandes();
+                  this.demande=new Demande();
 
-      if (this.demande.motif?.trim()) {
-          if (this.demande.id) {
-              // @ts-ignore
-              this.demandes[this.findIndexById(this.demande.id)] = this.demande;
-              this.messageService.add({ severity: 'success', summary: 'Successful', detail: 'Demande Updated', life: 3000 });
-          } else {
-              // @ts-ignore
-              this.demandes.push(this.demande);
-              this.messageService.add({ severity: 'success', summary: 'Successful', detail: 'Demande Created', life: 3000 });
-          }
+              });
+      } else {
 
-          this.demandes = [...this.demandes];
-          this.demandeDialog = false;
-          this.demande = new Demande();
-      }
+        console.log("^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^")
+          // Si Id existe on met à jour le agent existant
+          // this.updatesAgent();
+      }
+    }
+
+
+
+
+
+  //   saveDemande() {
+  //     this.submitted = true;
+
+  //     if (this.demande.id) {
+  //         if (this.demande.id) {
+  //             this.demandes[this.findIndexById(this.demande.id)] = this.demande;
+  //             this.messageService.add({ severity: 'success', summary: 'Successful', detail: 'Demande Updated', life: 3000 });
+  //         } else {
+  //             this.demandes.push(this.demande);
+  //             this.messageService.add({ severity: 'success', summary: 'Successful', detail: 'Demande Created', life: 3000 });
+  //         }
+
+  //         this.demandes = [...this.demandes];
+  //         this.demandeDialog = false;
+  //         this.demande = new Demande();
+  //     }
+  // }
+
+
+
+
+//   saveDemande() {
+//     this.submitted = true;
+//     const fileInput = this.fileInput.nativeElement;
+//     const file = fileInput.files?.[0];
+
+
+//     if (this.demande.id === 0 && file) {
+//         this.demandeService.uploadFile(this.demande, this.file).subscribe(
+//             (response) => {
+//                 console.log('Demande créé avec succès :', response);
+//                 this.messageService.add({ severity: 'success', summary: 'Opération réussie', detail: 'Demande créé avec succès!', life: 3000 });
+//                 this.demandeDialog = false;
+//                 this.demande = new Demande();
+//                 this.getDemandes();
+//             },
+//             (error) => {
+//                 console.error('Error creating demande:', error);
+//             }
+//         );
+//     } else {
+//         this.updatesDemandes();
+//     }
+// }
+
+
+
+
+
+  updatesDemandes() {
+    this.submitted = true;
+        this.demandeService.updateDemande(this.demande).subscribe(
+            (response) => {
+              this.messageService.add({ severity: 'success', summary: 'Opération réussie', detail: 'Opération Modification réussie!', life: 3000 });
+                this.demandeDialog = false;
+                this.getDemandes();
+            },
+        );
+  }
+
+
+  // uploadSingleFile(file:File){
+  //   this.demandeDialog=false;
+  //   this.fileService.uploadSingleFile(this.selectedFile).subscribe(
+  //     (response)=>{
+  //       this.messageService.add({severity:'success',summary:'chargement réussie',detail:'fichier chargé avec succès',life:3000})
+  //     }
+  //   )
+  // }
+
+
+
+  onFileChanged(event: any): void {
+    this.selectedFile = event.target.files[0];
+  }
+
+
+  // constructor(private fileService: FileService) {}
+
+onFileSelected(event: any): void {
+  this.selectedFile = event.target.files[0];
+}
+
+
+onMultipleFilesSelected(event: any): void {
+  this.selectedMultipleFiles = Array.from(event.target.files);
+}
+
+
+
+  onFilesChanged(event: any): void {
+    this.selectedMultipleFiles = event.target.files;
+  }
+
+  uploadSingleFile(): void {
+    if (this.selectedFile) {
+      this.fileService.uploadSingleFile(this.selectedFile as File).subscribe(response => {
+        console.log(this.uploadSingleFile, 'File uploaded successfully:', response);
+      }, error => {
+        console.error('Error uploading file:', error);
+      });
+    }
+  }
+
+
+  uploadMultipleFiles(): void {
+    if (this.selectedMultipleFiles.length > 0) {
+      this.fileService.uploadMultipleFiles(this.selectedMultipleFiles).subscribe(response => {
+        console.log('Files uploaded successfully:', response);
+      }, error => {
+        console.error('Error uploading files:', error);
+      });
+    }
   }
 
 
 
-
-
-
-
+  downloadFile(fileName: string): void {
+    this.fileService.downloadFile(fileName).subscribe(blob => {
+      const downloadLink = document.createElement('a');
+      const url = window.URL.createObjectURL(blob);
+      downloadLink.href = url;
+      downloadLink.download = fileName;
+      document.body.appendChild(downloadLink);
+      downloadLink.click();
+      document.body.removeChild(downloadLink);
+      window.URL.revokeObjectURL(url);
+    }, error => {
+      console.error('Error downloading file:', error);
+    });
+  }
 
 
 
@@ -283,18 +440,19 @@ export class DemandeComponent implements OnInit{
     updateRequiredFiles() {
         // console.log('Selected Certificate Type:', this.selectedCertificateType);
         // Mettez à jour les fichiers requis en fonction du type de certificat sélectionné
+        console.log('Selected Certificate Type:', this.selectedCertificateType);
         switch (this.selectedCertificateType) {
           case 'certificat1':
             this.requiredFiles = [
-              { fieldName: 'file1', label: 'certficat de nationalité' },
-              { fieldName: 'file2', label: 'fichier' },
-              {fieldName:'file',label:'fichier'}
+              { fieldName: 'fichier', label: 'certficat de nationalité' },
+              { fieldName: 'fichier', label: 'fichier' },
+              {fieldName:'fichier',label:'fichier'}
             ];
             break;
           case 'certificat2':
             this.requiredFiles = [
-              { fieldName: 'file3', label: 'Fichier 3' },
-              { fieldName: 'file4', label: 'Fichier 4' },
+              { fieldName: 'fichier', label: 'Fichier 3' },
+              { fieldName: 'fichier', label: 'Fichier 4' },
             ];
             break;
             case 'certificat3':
@@ -356,6 +514,7 @@ export class DemandeComponent implements OnInit{
             this.requiredFiles = [];
             break;
         }
+        console.log('Updated required files:', this.requiredFiles);
       }
 
 

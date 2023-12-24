@@ -18,14 +18,17 @@ export class AgentService{
         return this.http.get<Agent[]>(this.basUrl+ 'agents', {  observe: 'response' });
       }
 
+
+    
+
     
     createAgent(agent : Agent ) : Observable<EntityResponseType> {
         return this.http.post<Agent>(this.basUrl+ 'agent', agent, {  observe: 'response' });
       }
 
     
-    deleteAgent(idAgent: number): Observable<HttpResponse<{}>> {
-        return this.http.delete(`${this.basUrl +'agentSupprimer'}/${idAgent}`, { observe: 'response' });
+    deleteAgent(id: number): Observable<HttpResponse<{}>> {
+        return this.http.delete(`${this.basUrl +'agentSupprimer'}/${id}`, { observe: 'response' });
     }
     
 

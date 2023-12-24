@@ -35,29 +35,28 @@
                         <td>
                             <p-tableCheckbox [value]="demande"></p-tableCheckbox>
                         </td>
+                       
                         <td style="width:14%; min-width:10rem;">
                             <span class="p-column-title">ID</span>
                             {{demande.id || demande.id}}
                         </td>
+
                         <td style="width:14%; min-width:10rem;">
-                            <span class="p-column-title">Reference</span>
-                            {{demande.reference}}
+                            <span class="p-column-title">Motif</span>
+                        {{demande.motif}}
                         </td>
-                        <td style="width:14%; min-width:8rem;">
-                            <span class="p-column-title">Date</span>
-                            {{demande.date}}
-                        </td>
-                        <td style="width:14%; min-width:10rem;">
-                            <span class="p-column-title">Createur</span>
-                            {{demande.nom_agent_creer}}
-                        </td>
-                        <td style="width:14%; min-width: 10rem;">
-                            <span class="p-column-title">Actualisateur</span>
-                            {{demande.nom_agent_mise_jour}}
-                        </td>
+
+                       <td style="width:14%; min-width: 10rem;">
+                        <span class="p-column-title">Date</span>
+                        {{demande.date}}
+                       </td>
+                       <td style="width:14%; min-width: 10rem;">
+                        <span class="p-column-title">Matricule</span>
+                        {{demande.matriculeAgent}}
+                       </td>
                        <td style="width:14%; min-width: 10rem;">
                         <span class="p-column-title">Etat</span>
-                        {{demande.etatDossier}}
+                        <!-- {{demande.etatDossier}} -->
                        </td>
                         <td>
                             <div class="flex">
